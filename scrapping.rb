@@ -23,27 +23,24 @@ end
 
 def get_all_the_urls_of_loire_atlantique_townhalls (url)
 	#déclarer un tableau
-	array =[]
-
+	assemblage ={}
 	page = Nokogiri::HTML(open(url))
-	liens =page.xpath("//a[@class=\"lientxt\"]").each do |node|
-		puts node[:href]
 
-#binding.pry
-
+	page.xpath("//a[@class=\"lientxt\"]").each do |node|
+		puts node.text
 		#ajouter "http://annuaire-des-mairies.com/" + node[:href] au tableau
-        array << "http://annuaire-des-mairies.com/" + node[:href]
+        assemblage[node.text] = "http://annuaire-des-mairies.com/" + node[:href]
     end
 
-    return array
+    return assemblage
     #renvoyer le tableau
 end
 
 def additionner
 	additionner = {}
 	url= "http://annuaire-des-mairies.com/loire-atlantique.html"
-	get_all_the_urls_of_loire_atlantique_townhalls(url).each do |townhalls|
-		additionner[townhalls] = get_the_email_of_a_townhal_from_its_webpage(townhalls)
+	get_all_the_urls_of_loire_atlantique_townhalls(url).each do |ville, email|
+		additionner[ville] = get_the_email_of_a_townhal_from_its_webpage(email)
 	end
 	return additionner
 end
